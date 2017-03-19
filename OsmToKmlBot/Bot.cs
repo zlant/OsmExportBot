@@ -113,8 +113,9 @@ namespace OsmToKmlBot
             }
             else if ( update.Message.Text == "/rules" )
             {
-                string text = GetRulesCommands();
-                bot.SendTextMessage( update.Message.Chat.Id, text );
+                string message = "Нажмите на нужный набор:\r\n";
+                string commands = GetRulesCommands();
+                bot.SendTextMessage( update.Message.Chat.Id, message + commands );
                 return;
             }
             else if ( update.Message.Text.StartsWith( "/set" ) )
@@ -122,18 +123,18 @@ namespace OsmToKmlBot
                 var words = update.Message.Text.Split( ' ' );
                 if ( words.Length != 2 )
                 {
-                    bot.SendTextMessage( update.Message.Chat.Id, "Неправильный формат команды. Пример: `/set myrule`", parseMode: ParseMode.Markdown );
+                    bot.SendTextMessage( update.Message.Chat.Id, "Неправильный формат команды. Пример: `/set name`", parseMode: ParseMode.Markdown );
                     return;
                 }
                 var rule = words[ 1 ].Trim().ToLower();
                 if ( !Regex.IsMatch( rule, @"^[A-Za-z0-9]+$" ) )
                 {
-                    bot.SendTextMessage( update.Message.Chat.Id, "Неправльный формат названия. Пример: `/set myrule`", parseMode: ParseMode.Markdown );
+                    bot.SendTextMessage( update.Message.Chat.Id, "Название может содержать только буквы латинского алфавита и цифры." );
                     return;
                 }
                 if ( GetRules().Contains( rule ) )
                 {
-                    bot.SendTextMessage( update.Message.Chat.Id, "Привило с таким именем уже существует, придумайте другое название." );
+                    bot.SendTextMessage( update.Message.Chat.Id, "Правило с таким именем уже существует, придумайте другое название." );
                     return;
                 }
                 newRuleFromChats.Add( new ChatRule {
