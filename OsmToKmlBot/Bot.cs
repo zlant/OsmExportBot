@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -71,7 +70,7 @@ namespace OsmToKmlBot
 
                 status = "SendFile";
                 var kml = GeneratorKml.GenerateKml( result, filename );
-                await BotQueries.SendFileAsync( update.Message.Chat.Id, kml, filename );
+                await BotQueries.SendFileAsync( update.Message.Chat.Id, kml, filename + ".kml" );
 
                 WriteLog( update.Message.Chat.Id, filename );
 
@@ -87,7 +86,7 @@ namespace OsmToKmlBot
 
             using ( StreamWriter wr = new StreamWriter( Config.LogFolder + logfile, true ) )
             {
-                wr.WriteLine( id + " " + filename );
+                wr.WriteLine( id + "\t" + filename );
             }
         }
 
@@ -95,27 +94,17 @@ namespace OsmToKmlBot
         {
             if ( update.Message.Text == "/start" )
             {
-                bot.SendTextMessage( update.Message.Chat.Id, Config.StartText );
+                bot.SendTextMessage( update.Message.Chat.Id, Config.StartText, parseMode: ParseMode.Markdown );
                 return;
             }
-            else if ( update.Message.Text.StartsWith( "/get " ) )
+            else if ( update.Message.Text.StartsWith( "/show" ) )
             {
                 var words = update.Message.Text.Split( ' ' );
-                if ( words.Length < 2 )
-                    return;
-                currentRulesForChats.RemoveAll( x => x.ChatId == update.Message.Chat.Id );
-                currentRulesForChats.Add( new ChatRule
+                if ( words.Length != 2 )
                 {
-                    ChatId = update.Message.Chat.Id,
-                    RuleName = words[ 1 ].ToLower()
-                } );
-                return;
-            }
-            else if ( update.Message.Text.StartsWith( "/show " ) )
-            {
-                var words = update.Message.Text.Split( ' ' );
-                if ( words.Length < 2 )
+                    bot.SendTextMessage( update.Message.Chat.Id, "Неправильный формат команды. Пример: `/show nolvl`", parseMode: ParseMode.Markdown );
                     return;
+                }
                 var name = words[ 1 ].ToLower();
                 string path = Config.RulesFolder + name + ".txt";
                 using ( var rd = new StreamReader( path ) )
@@ -128,21 +117,30 @@ namespace OsmToKmlBot
                 bot.SendTextMessage( update.Message.Chat.Id, text );
                 return;
             }
-            else if ( update.Message.Text.StartsWith( "/set " ) )
+            else if ( update.Message.Text.StartsWith( "/set" ) )
             {
                 var words = update.Message.Text.Split( ' ' );
                 if ( words.Length != 2 )
+                {
+                    bot.SendTextMessage( update.Message.Chat.Id, "Неправильный формат команды. Пример: `/set myrule`", parseMode: ParseMode.Markdown );
                     return;
+                }
                 var rule = words[ 1 ].Trim().ToLower();
                 if ( !Regex.IsMatch( rule, @"^[A-Za-z0-9]+$" ) )
-                    return;
-                if ( GetRules().Contains( rule ) )
-                    return;
-                newRuleFromChats.Add( new ChatRule
                 {
+                    bot.SendTextMessage( update.Message.Chat.Id, "Неправльный формат названия. Пример: `/set myrule`", parseMode: ParseMode.Markdown );
+                    return;
+                }
+                if ( GetRules().Contains( rule ) )
+                {
+                    bot.SendTextMessage( update.Message.Chat.Id, "Привило с таким именем уже существует, придумайте другое название." );
+                    return;
+                }
+                newRuleFromChats.Add( new ChatRule {
                     ChatId = update.Message.Chat.Id,
                     RuleName = rule
                 } );
+                bot.SendTextMessage( update.Message.Chat.Id, "Теперь отправьте текст overpass запроса." );
             }
             else if ( newRuleFromChats.Exists( x => x.ChatId == update.Message.Chat.Id ) )
             {
@@ -153,6 +151,8 @@ namespace OsmToKmlBot
                 {
                     wr.Write( update.Message.Text );
                 }
+
+                bot.SendTextMessage( update.Message.Chat.Id, "Новое правило создано. /" + name );
                 return;
             }
             else if ( update.Message.Text.StartsWith( "/" ) )
@@ -160,14 +160,18 @@ namespace OsmToKmlBot
                 var rule = update.Message.Text.Split( ' ' )[ 0 ].Trim().TrimStart( '/' ).ToLower();
 
                 if ( !GetRules().Contains( rule ) )
+                {
+                    bot.SendTextMessage( update.Message.Chat.Id, "Такого правила не существует." );
                     return;
+                }
 
                 currentRulesForChats.RemoveAll( x => x.ChatId == update.Message.Chat.Id );
-                currentRulesForChats.Add( new ChatRule
-                {
+                currentRulesForChats.Add( new ChatRule {
                     ChatId = update.Message.Chat.Id,
                     RuleName = rule
                 } );
+                bot.SendTextMessage( update.Message.Chat.Id, "Теперь отправьте местоположение." );
+
                 return;
             }
         }
@@ -201,7 +205,7 @@ namespace OsmToKmlBot
 
         static string GenerateFileName( string rule )
         {
-            return string.Format( "{6}_{0}-{1:00}-{2:00}_{3:00}-{4:00}-{5:00}.kml",
+            return string.Format( "{6}_{0}-{1:00}-{2:00}_{3:00}-{4:00}-{5:00}",
                 DateTime.Now.Year,
                 DateTime.Now.Month,
                 DateTime.Now.Day,
