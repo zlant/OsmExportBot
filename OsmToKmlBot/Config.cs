@@ -33,16 +33,14 @@ namespace OsmToKmlBot
 [out:csv(::lat,::lon)][timeout:25];
 (
   node[""shop""][""opening_hours""!~"".*""]({{bbox}});
-  way[ ""shop"" ][ ""opening_hours""!~"".*"" ]({{bbox
-    }
-});
+  way[ ""shop"" ][ ""opening_hours""!~"".*"" ]({{bbox}});
   relation[ ""shop"" ][ ""opening_hours""!~"".* ""]({{bbox}});
 );
 out center;
 ```
 === Другие команды ===
 
-`/show<rule_name>` - посмотреть overpass запрос
+`/show <rule_name>` - посмотреть overpass запрос
 ";
     }
 }
