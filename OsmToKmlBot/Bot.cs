@@ -83,10 +83,11 @@ namespace OsmToKmlBot
         {
             //var logfile = "log" + DateTime.Now.Year % 100 + DateTime.Now.Month + ".txt";
             var logfile = "log.txt";
+            var split = filename.Split( '_' );
 
             using ( StreamWriter wr = new StreamWriter( Config.LogFolder + logfile, true ) )
             {
-                wr.WriteLine( id + "\t" + filename );
+                wr.WriteLine( "{2} {3}   {0,-17}{1}", id, split[ 0 ], split[ 1 ], split[ 2 ] );
             }
         }
 
