@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OsmToKmlBot
 {
-    class BotQueries
+    public class BotQueries
     {
         public static Telegram.Bot.Types.Update[] GetUpdates( int offset = 0 )
         {

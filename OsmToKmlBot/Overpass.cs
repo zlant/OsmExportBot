@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace OsmToKmlBot
 {
-    class Overpass
+    public class Overpass
     {
         static readonly Uri OverpassApiUri = new Uri( "http://overpass-api.de/api/interpreter" );
 

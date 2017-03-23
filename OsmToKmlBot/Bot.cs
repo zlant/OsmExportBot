@@ -69,7 +69,8 @@ namespace OsmToKmlBot
 
 
                 status = "SendFile";
-                var kml = GeneratorKml.GenerateKml( result, filename );
+                var colour = GetRules().ToList().IndexOf( rule );
+                var kml = GeneratorKml.GenerateKml( result, filename, colour );
                 await BotQueries.SendFileAsync( update.Message.Chat.Id, kml, filename + ".kml" );
 
                 WriteLog( update.Message.Chat.Id, filename );

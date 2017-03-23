@@ -9,9 +9,20 @@ using System.Threading.Tasks;
 
 namespace OsmToKmlBot
 {
-    class GeneratorKml
+    public class GeneratorKml
     {
-        public static string GenerateKml( string coords, string filename )
+        static string[] colours = {
+            "#placemark-blue",
+            "#placemark-brown",
+            "#placemark-green",
+            "#placemark-orange",
+            "#placemark-pink",
+            "#placemark-purple",
+            "#placemark-red",
+            "#placemark-yellow"
+        };
+
+        public static string GenerateKml( string coords, string filename, int colour = 6 )
         {
             var placemarks = new Document();
             placemarks.Name = filename;
@@ -28,8 +39,11 @@ namespace OsmToKmlBot
                 var point = new Point();
                 point.Coordinate = new Vector( lat, lon );
 
+                var style = new Uri( colours[ colour % colours.Length ], UriKind.Relative );
+
                 Placemark placemark = new Placemark();
                 placemark.Geometry = point;
+                placemark.StyleUrl = style;
 
                 placemarks.AddFeature( placemark );
             }
