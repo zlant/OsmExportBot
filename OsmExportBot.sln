@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmExportBotApp", "OsmExportBotApp\OsmExportBotApp.csproj", "{6B2125FD-BCC9-49B3-B4AD-F3AE11C5A94D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmExportBot", "OsmExportBot\OsmExportBot.csproj", "{B8AC0D2C-8D3B-4C47-ABEC-D78C24FD3707}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6B2125FD-BCC9-49B3-B4AD-F3AE11C5A94D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B2125FD-BCC9-49B3-B4AD-F3AE11C5A94D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B2125FD-BCC9-49B3-B4AD-F3AE11C5A94D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B2125FD-BCC9-49B3-B4AD-F3AE11C5A94D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8AC0D2C-8D3B-4C47-ABEC-D78C24FD3707}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8AC0D2C-8D3B-4C47-ABEC-D78C24FD3707}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8AC0D2C-8D3B-4C47-ABEC-D78C24FD3707}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8AC0D2C-8D3B-4C47-ABEC-D78C24FD3707}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

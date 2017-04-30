@@ -11,7 +11,7 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace OsmToKmlBot
+namespace OsmExportBot
 {
     public class Bot
     {
