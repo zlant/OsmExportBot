@@ -21,13 +21,13 @@ namespace OsmExportBot.Commands
             var words = message.Text.Split(' ');
             if (words.Length != 2)
             {
-                bot.SendTextMessage(message.Chat.Id, "Неправильный формат команды. Пример: `/show nolvl`", parseMode: ParseMode.Markdown);
+                bot.SendTextMessageAsync(message.Chat.Id, "Неправильный формат команды. Пример: `/show nolvl`", parseMode: ParseMode.Markdown);
                 return;
             }
             var name = words[1].ToLower();
             string path = Config.RulesFolder + name + ".txt";
             using (var rd = new StreamReader(path))
-                bot.SendTextMessage(message.Chat.Id, rd.ReadToEnd());
+                bot.SendTextMessageAsync(message.Chat.Id, rd.ReadToEnd());
             return;
         }
     }

@@ -30,10 +30,13 @@ namespace OsmExportBot
 
         static LocationCommand locationCommand = new LocationCommand();
 
-        public static async Task GetUpdates()
+        public static async Task<Update[]> GetUpdates()
         {
-            var updates = await bot.GetUpdates(offset);
+            return await bot.GetUpdatesAsync(offset);
+        }
 
+        public static void ProcessingUpdates(Update[] updates)
+        {
             foreach (var update in updates)
             {
                 if (update.Id >= offset)
@@ -41,14 +44,17 @@ namespace OsmExportBot
 
                 if (update.Message.Type == MessageType.TextMessage)
                 {
-                    var command = commandsWithKeyWord.FirstOrDefault(x => update.Message.Text.Contains(x.Name));
+                    var command = commandsWithKeyWord
+                        .FirstOrDefault(x => update.Message.Text.StartsWith("/" + x.Name));
 
                     if (command != null)
+                    {
                         command.Excecute(update.Message, bot);
+                    }
                     else if (UserState.NewRule.ContainsKey(update.Message.Chat.Id))
                     {
                         if (Rules.NewRule(update))
-                            bot.SendTextMessage(update.Message.Chat.Id, "Новое правило создано.");
+                            bot.SendTextMessageAsync(update.Message.Chat.Id, "Новое правило создано.");
                     }
                     else if (update.Message.Text.StartsWith("/"))
                     {
@@ -57,14 +63,13 @@ namespace OsmExportBot
                         if (Rules.GetRules().Contains(rule))
                         {
                             UserState.CurrentRule[update.Message.Chat.Id] = rule;
-                            bot.SendTextMessage(update.Message.Chat.Id, "Теперь отправьте местоположение.");
+                            bot.SendTextMessageAsync(update.Message.Chat.Id, "Теперь отправьте местоположение.");
                         }
                         else
                         {
-                            bot.SendTextMessage(update.Message.Chat.Id, "Такого правила не существует.");
+                            bot.SendTextMessageAsync(update.Message.Chat.Id, "Такого правила не существует.");
                         }
                     }
-
                 }
                 else if (update.Message.Type == MessageType.LocationMessage)
                 {
@@ -73,13 +78,9 @@ namespace OsmExportBot
             }
         }
 
-        public static void Run(object obj)
+        public static async void Run(object obj)
         {
-            lock (locker)
-            {
-                GetUpdates();
-            }
+            ProcessingUpdates(await GetUpdates());
         }
-
     }
 }

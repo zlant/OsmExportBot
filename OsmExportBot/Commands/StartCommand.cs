@@ -17,7 +17,7 @@ namespace OsmExportBot.Commands
 
         public override void Excecute(Message message, TelegramBotClient bot)
         {
-            bot.SendTextMessage(message.Chat.Id, Config.StartText, parseMode: ParseMode.Markdown);
+            bot.SendTextMessageAsync(message.Chat.Id, Config.StartText, parseMode: ParseMode.Markdown);
         }
     }
 }

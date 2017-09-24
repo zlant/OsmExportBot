@@ -20,7 +20,7 @@ namespace OsmExportBot.Commands
         {
             string msg = "Нажмите на нужный набор:\r\n";
             string commands = Rules.GetRulesCommands();
-            bot.SendTextMessage(message.Chat.Id, msg + commands);
+            bot.SendTextMessageAsync(message.Chat.Id, msg + commands);
             return;
         }
     }

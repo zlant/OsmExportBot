@@ -26,19 +26,22 @@ namespace OsmExportBot.Commands
         public override void Excecute(Message message, TelegramBotClient bot)
         {
             string rule = "nolvl";
-            UserState.CurrentRule.TryRemove(message.Chat.Id, out rule);
+
+            if (UserState.CurrentRule.ContainsKey(message.Chat.Id))
+                UserState.CurrentRule.TryRemove(message.Chat.Id, out rule);
 
             var query = overpass.BuildQuery(rule, message.Location.Latitude, message.Location.Longitude);
 
             var result = overpass.RunQuery(query);
-            var filename = generatorKml.GenerateFileName(rule);
+            var fileName = generatorKml.GenerateFileName(rule);
 
 
             var colour = Rules.GetRules().ToList().IndexOf(rule);
-            var kml = generatorKml.Generate(result, filename, colour);
-            SendFileAsync(message.Chat.Id, kml, filename);
+            var fileContent = generatorKml.Generate(result, fileName, colour);
+            SendFile(message.Chat.Id, fileContent, fileName);
 
-            WriteLog(message.Chat.Id, filename);
+            Console.WriteLine(fileName);
+            WriteLog(message.Chat.Id, fileName);
         }
 
         void WriteLog(long id, string filename)
@@ -53,16 +56,16 @@ namespace OsmExportBot.Commands
             }
         }
 
-        public async static Task SendFileAsync(long chatId, string kml, string filename)
+        public static async void SendFile(long chatId, string fileContent, string fileName)
         {
             var url = String.Format("https://api.telegram.org/bot{0}/sendDocument", Config.Token);
 
             using (var form = new MultipartFormDataContent())
             {
-                using (Stream kmlStream = GenerateStreamFromString(kml))
+                using (Stream fileContentStream = new MemoryStream(Encoding.UTF8.GetBytes(fileContent)))
                 {
                     form.Add(new StringContent(chatId.ToString(), Encoding.UTF8), "chat_id");
-                    form.Add(new StreamContent(kmlStream), "document", filename);
+                    form.Add(new StreamContent(fileContentStream), "document", fileName);
 
                     using (var client = new HttpClient())
                     {
@@ -70,16 +73,6 @@ namespace OsmExportBot.Commands
                     }
                 }
             }
-        }
-
-        static Stream GenerateStreamFromString(string s)
-        {
-            MemoryStream stream = new MemoryStream();
-            StreamWriter writer = new StreamWriter(stream);
-            writer.Write(s);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
         }
     }
 }
