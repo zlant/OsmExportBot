@@ -57,12 +57,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Rules.cs" />
+    <Compile Include="UserState.cs" />
     <Compile Include="Bot.cs" />
-    <Compile Include="BotQueries.cs" />
-    <Compile Include="ChatQuery.cs" />
+    <Compile Include="Commands\LocationCommand.cs" />
+    <Compile Include="Commands\RulesCommand.cs" />
+    <Compile Include="Commands\ShowCommand.cs" />
+    <Compile Include="Commands\SetCommand.cs" />
+    <Compile Include="Commands\StartCommand.cs" />
+    <Compile Include="Commands\Command.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="GeneratorKml.cs" />
-    <Compile Include="Overpass.cs" />
+    <Compile Include="DataSource\IDataSource.cs" />
+    <Compile Include="DataSource\Overpass.cs" />
+    <Compile Include="Generators\GeneratorGpx.cs" />
+    <Compile Include="Generators\GeneratorKml.cs" />
+    <Compile Include="Generators\Generator.cs" />
+    <Compile Include="Gpx\GpsLocation.cs" />
+    <Compile Include="Gpx\Gpx.cs" />
+    <Compile Include="Gpx\GpxProperties.cs" />
+    <Compile Include="Gpx\GpxReader.cs" />
+    <Compile Include="Gpx\GpxWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +87,7 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
