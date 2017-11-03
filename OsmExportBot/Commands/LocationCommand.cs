@@ -1,4 +1,5 @@
 ﻿using OsmExportBot.DataSource;
+using OsmExportBot.Primitives;
 using OsmExportBot.Generators;
 using System;
 using System.Collections.Generic;
@@ -19,9 +20,9 @@ namespace OsmExportBot.Commands
 
         public override MessageType Type { get; set; } = MessageType.LocationMessage;
 
-        private IDataSource overpass = new OverPpass();
+        private Overpass overpass = new Overpass();
 
-        private Generator generatorKml = new GeneratorKMml();
+        private GeneratorKml generatorKml = new GeneratorKml();
 
         public override void Excecute(Message message, TelegramBotClient bot)
         {
@@ -32,27 +33,28 @@ namespace OsmExportBot.Commands
 
             var query = overpass.BuildQuery(rule, message.Location.Latitude, message.Location.Longitude);
 
-            var result = overpass.RunQuery(query);
-            var fileName = generatorKml.GenerateFileName(rule);
-
-
-            var colour = Rules.GetRules().ToList().IndexOf(rule);
-            var fileContent = generatorKml.Generate(result, fileName, colour);
+            string fileName = generatorKml.GenerateFileName(rule);
+            var primitives = overpass.RunQuery(query);
+            string fileContent = generatorKml.Generate(primitives, fileName);
+            
             SendFile(message.Chat.Id, fileContent, fileName);
 
             Console.WriteLine(fileName);
-            WriteLog(message.Chat.Id, fileName);
+            WriteLog(message.Chat.Id, rule);
         }
 
-        void WriteLog(long id, string filename)
+        void WriteLog(long id, string ruleName)
         {
             //var logfile = "log" + DateTime.Now.Year % 100 + DateTime.Now.Month + ".txt";
             var logfile = "log.txt";
-            var split = filename.Split('_');
 
             using (StreamWriter wr = new StreamWriter(Config.LogFolder + logfile, true))
             {
-                wr.WriteLine("{2} {3}   {0,-17}{1}", id, split[0], split[1], split[2]);
+                wr.WriteLine("{2} {3}   {0,-17}{1}",
+                    id,
+                    ruleName,
+                    DateTime.Now.ToString("yyyy-MM-dd"),
+                    DateTime.Now.ToString("HH-mm-ss"));
             }
         }
 

@@ -40,11 +40,13 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,6 +59,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CreateCommand.cs" />
+    <Compile Include="DataSource\Nominatim.cs" />
+    <Compile Include="DataSource\NominatimModels.cs" />
+    <Compile Include="DataSource\OverpassModels.cs" />
+    <Compile Include="DataSource\OverpassModelsConverter.cs" />
+    <Compile Include="DataSource\ParkingWay.cs" />
+    <Compile Include="Primitives\Line.cs" />
+    <Compile Include="Primitives\LineOffseter.cs" />
+    <Compile Include="Primitives\Point.cs" />
+    <Compile Include="Primitives\PrimitiveCollections.cs" />
     <Compile Include="Rules.cs" />
     <Compile Include="UserState.cs" />
     <Compile Include="Bot.cs" />
@@ -67,7 +79,6 @@
     <Compile Include="Commands\StartCommand.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Config.cs" />
-    <Compile Include="DataSource\IDataSource.cs" />
     <Compile Include="DataSource\Overpass.cs" />
     <Compile Include="Generators\GeneratorGpx.cs" />
     <Compile Include="Generators\GeneratorKml.cs" />

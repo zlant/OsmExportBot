@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using OsmExportBot.DataSource;
+using OsmExportBot.Primitives;
 
 namespace OsmExportBot.Generators
 {
@@ -13,7 +15,7 @@ namespace OsmExportBot.Generators
     {
         public override string FileExtension { get; set; } = ".gpx";
 
-        public override string Generate(string coords, string filename, int colour)
+        public override string Generate(PrimitiveCollections primitives, string fileName)
         {
             throw new NotImplementedException();
         }
