@@ -1,7 +1,7 @@
 [out:csv(::lat,::lon)][timeout:25];
 (
-  node["entrance"]["ref"]["addr:flats"!~".*"]({{bbox}});
-  node["entrance"="staircase"]["ref"!~".*"]({{bbox}});
-  node["entrance"="staircase"]["addr:flats"!~".*"]({{bbox}});
+  node["entrance"]["ref"][!"addr:flats"]({{bbox}});
+  node["entrance"="staircase"][!"ref"]({{bbox}});
+  node["entrance"="staircase"][!"addr:flats"]({{bbox}});
 );
 out center;

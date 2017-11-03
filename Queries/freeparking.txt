@@ -1,0 +1,10 @@
+[out:csv(::lat,::lon)][timeout:25];
+(
+  node["amenity"="parking"]["fee"!="yes"]["access"!="private"]["access"!="customers"]["access"!="no"]({{bbox}});
+  way["amenity"="parking"]["fee"!="yes"]["access"!="private"]["access"!="customers"]["access"!="no"]({{bbox}});
+  relation["amenity"="parking"]["fee"!="yes"]["access"!="private"]["access"!="customers"]["access"!="no"]({{bbox}});
+  
+  way["parking:condition:left"="free"]({{bbox}});
+  way["parking:condition:right"="free"]({{bbox}});
+);
+out center;

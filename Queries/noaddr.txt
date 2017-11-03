@@ -1,7 +1,7 @@
 [out:csv(::lat,::lon)][timeout:25];
 (
-  node["building"]["addr:housenumber"!~".*"]({{bbox}});
-  way["building"]["addr:housenumber"!~".*"]({{bbox}});
-  relation["building"]["addr:housenumber"!~".*"]({{bbox}});
+  node["building"][!"addr:housenumber"]({{bbox}});
+  way["building"][!"addr:housenumber"]({{bbox}});
+  relation["building"][!"addr:housenumber"]({{bbox}});
 );
 out center;
