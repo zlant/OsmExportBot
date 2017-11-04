@@ -13,8 +13,8 @@ namespace OsmExportBot
         public static IEnumerable<string> GetRules()
         {
             var rules = Directory.GetFiles(Config.RulesFolder)
-                                .Select(x => x.Split(new char[] { '\\', '/' }).Last())
-                                .Select(x => x.Split('.').First());
+                .Select(x => x.Split(Path.DirectorySeparatorChar).Last())
+                .Select(x => x.Split('.').First());
             return rules;
         }
 

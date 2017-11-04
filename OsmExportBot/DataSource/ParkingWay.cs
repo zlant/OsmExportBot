@@ -46,8 +46,8 @@ namespace OsmExportBot.DataSource
 
             switch (lane)
             {
-                case "no_parking": color = "red"; return true;
-                case "no_stopping": color = "orange"; return true;
+                case "no_parking": color = "orange"; return true;
+                case "no_stopping": color = "red"; return true;
             }
             switch (condition)
             {
@@ -63,13 +63,10 @@ namespace OsmExportBot.DataSource
 
         public List<Line> GetLines()
         {
-            List<Line> lines = new List<Primitives.Line>();
+            List<Line> lines = new List<Line>();
             if (Right.Points != null) lines.Add(Right);
             if (Left.Points != null) lines.Add(Left);
             return lines;
         }
-
-        #region Parallel shift line
-        #endregion
     }
 }

@@ -17,9 +17,10 @@ namespace OsmExportBot.Primitives
 
         public static Line Offset(this Line line, Offset offset, string color)
         {
-            line.Points = line.Points.Offset(offset);
-            line.Color = color;
-            return line;
+            return new Line {
+                Points = line.Points.Offset(offset),
+                Color = color
+            };
         }
 
         public static Point[] Offset(this Point[] pts, Offset offset)
