@@ -48,5 +48,10 @@ namespace OsmExportBot
 
             return query;
         }
+
+        public static int IndexOfRule(string name)
+        {
+            return GetRules().ToList().IndexOf(name);
+        }
     }
 }

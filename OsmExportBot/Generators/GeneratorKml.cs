@@ -13,15 +13,15 @@ namespace OsmExportBot.Generators
 {
     public class GeneratorKml : Generator
     {
-        string[] stylesMapsMe = {
-            "#placemark-blue",
-            "#placemark-brown",
-            "#placemark-green",
-            "#placemark-orange",
-            "#placemark-pink",
-            "#placemark-purple",
-            "#placemark-red",
-            "#placemark-yellow"
+        public static string[] StylesMapsMe = {
+            "placemark-blue",
+            "placemark-brown",
+            "placemark-green",
+            "placemark-orange",
+            "placemark-pink",
+            "placemark-purple",
+            "placemark-red",
+            "placemark-yellow"
         };
 
         Dictionary<string, Color32> colors = new Dictionary<string, Color32> {
@@ -38,6 +38,7 @@ namespace OsmExportBot.Generators
         public override string Generate(PrimitiveCollections primitives, string fileName)
         {
             var placemarks = new List<Placemark>();
+            var styles = new List<Style>();
 
             foreach (var coord in primitives.Points)
             {
@@ -55,6 +56,17 @@ namespace OsmExportBot.Generators
                 placemarks.Add(placemark);
             }
 
+            if (primitives.Lines.Count > 0)
+                foreach (var color in colors)
+                {
+                    Style style = new Style();
+                    style.Id = color.Key;
+                    style.Line = new LineStyle();
+                    style.Line.Color = color.Value;
+
+                    styles.Add(style);
+                }
+
             foreach (var line in primitives.Lines)
             {
                 var placemark = new Placemark {
@@ -64,7 +76,7 @@ namespace OsmExportBot.Generators
                 placemarks.Add(placemark);
             }
 
-            return GenerateKmlFromFeatures(placemarks, fileName);
+            return GenerateKmlFromFeatures(placemarks, styles, fileName);
         }
 
         private LineString PrimitiveLineToLineString(Line line)
@@ -77,20 +89,13 @@ namespace OsmExportBot.Generators
             };
         }
 
-        private string GenerateKmlFromFeatures(IEnumerable<Feature> features, string filename)
+        private string GenerateKmlFromFeatures(IEnumerable<Feature> features, IEnumerable<Style> styles, string filename)
         {
             var document = new Document();
             document.Name = filename;
 
-            foreach (var color in colors)
-            {
-                Style style = new Style();
-                style.Id = color.Key;
-                style.Line = new LineStyle();
-                style.Line.Color = color.Value;
-
+            foreach (var style in styles)
                 document.AddStyle(style);
-            }
 
             foreach (var feature in features)
                 document.AddFeature(feature);

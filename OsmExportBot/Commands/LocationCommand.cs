@@ -31,11 +31,12 @@ namespace OsmExportBot.Commands
             if (UserState.CurrentRule.ContainsKey(message.Chat.Id))
                 UserState.CurrentRule.TryRemove(message.Chat.Id, out rule);
 
-            var query = overpass.BuildQuery(rule, message.Location.Latitude, message.Location.Longitude);
+            var query = new Query { RuleName = rule };
+            overpass.BuildQuery(query, message.Location.Latitude, message.Location.Longitude);
 
             string fileName = generatorKml.GenerateFileName(rule);
-            var primitives = overpass.RunQuery(query);
-            string fileContent = generatorKml.Generate(primitives, fileName);
+            overpass.RunQuery(query);
+            string fileContent = generatorKml.Generate(query.Response, fileName);
             
             SendFile(message.Chat.Id, fileContent, fileName);
 

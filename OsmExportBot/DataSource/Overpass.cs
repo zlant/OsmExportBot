@@ -1,4 +1,5 @@
-﻿using OsmExportBot.Primitives;
+﻿using OsmExportBot.Generators;
+using OsmExportBot.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -32,9 +33,9 @@ namespace OsmExportBot.DataSource
         }
 
         #region Builder query
-        public string BuildQuery(string name, float lat, float lon)
+        public void BuildQuery(Query query, float lat, float lon)
         {
-            var request = Rules.GetRule(name);
+            var request = Rules.GetRule(query.RuleName);
 
             if (request.Contains(@"{{bbox}}"))
             {
@@ -48,7 +49,7 @@ namespace OsmExportBot.DataSource
                 request = request.Replace(@"{{city}}", cityId);
             }
 
-            return request;
+            query.Request = request;
         }
 
         private string GetBbox(float lat, float lon)
@@ -62,19 +63,22 @@ namespace OsmExportBot.DataSource
         #endregion
 
         #region Runner query
-        public PrimitiveCollections RunQuery(string query)
+        public void RunQuery(Query query)
         {
             string result;
             using (var webClient = new WebClient())
             {
-                webClient.QueryString.Add("data", query);
+                webClient.QueryString.Add("data", query.Request);
                 result = webClient.DownloadString(ApiUri);
             }
 
-            if (IsXmlResponse(query))
-                return ConvertToPrimitives(Desir<osm>(result), GetParsingOption(query));
-            else
-                return ConvertToPrimitives(result);
+            if (IsXmlResponse(query.Request))
+                query.Response = ConvertToPrimitives(Desir<osm>(result), GetParsingOption(query.Request));
+            else // if csv
+            {
+                string color = GeneratorKml.StylesMapsMe[Rules.IndexOfRule(query.RuleName) % GeneratorKml.StylesMapsMe.Length];
+                query.Response = ConvertToPrimitives(result, color);
+            }
         }
 
         private T Desir<T>(string xml)
@@ -105,7 +109,7 @@ namespace OsmExportBot.DataSource
             return options;
         }
 
-        private PrimitiveCollections ConvertToPrimitives(string csv)
+        private PrimitiveCollections ConvertToPrimitives(string csv, string color)
         {
             var primitives = new PrimitiveCollections();
 
@@ -117,8 +121,8 @@ namespace OsmExportBot.DataSource
                 if (!double.TryParse(location[0], NumberStyles.Float, CultureInfo.InvariantCulture, out lat) ||
                     !double.TryParse(location[1], NumberStyles.Float, CultureInfo.InvariantCulture, out lon))
                     continue;
-
-                primitives.Points.Add(new Point(lat, lon));
+                
+                primitives.Points.Add(new Point(lat, lon, color));
             }
 
             return primitives;

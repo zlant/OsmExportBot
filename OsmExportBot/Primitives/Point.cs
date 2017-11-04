@@ -13,8 +13,11 @@ namespace OsmExportBot.Primitives
         public string Color;
 
         public Point(double lat, double lon)
+            : this(lat, lon, "") { }
+
+        public Point(double lat, double lon, string color)
         {
-            Color = "";
+            Color = color;
             Lat = lat;
             Lon = lon;
         }

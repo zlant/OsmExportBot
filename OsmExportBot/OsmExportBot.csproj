@@ -65,6 +65,7 @@
     <Compile Include="DataSource\OverpassModels.cs" />
     <Compile Include="DataSource\OverpassModelsConverter.cs" />
     <Compile Include="DataSource\ParkingWay.cs" />
+    <Compile Include="DataSource\Query.cs" />
     <Compile Include="Primitives\Line.cs" />
     <Compile Include="Primitives\LineOffseter.cs" />
     <Compile Include="Primitives\Point.cs" />
