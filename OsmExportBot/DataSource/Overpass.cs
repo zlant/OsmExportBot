@@ -103,7 +103,7 @@ namespace OsmExportBot.DataSource
         {
             ParseOption options = ParseOption.NoOption;
 
-            if (query.Contains("parking:lane:"))
+            if (query.Contains("parking:lane:") || query.Contains("parking:condition:"))
                 options = options | ParseOption.ParkingLaneShift;
 
             return options;

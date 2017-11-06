@@ -13,7 +13,7 @@ namespace OsmExportBot.DataSource
     {
         public static bool IsParkingLane(osmWay way)
         {
-            return way.tag.Any(x => x.k.StartsWith("parking:lane:"));
+            return way.tag.Any(x => x.k.StartsWith("parking:lane:") || x.k.StartsWith("parking:condition:"));
         }
 
         public Line Right { get; set; }
