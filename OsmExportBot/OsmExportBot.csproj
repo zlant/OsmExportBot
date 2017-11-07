@@ -60,10 +60,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CreateCommand.cs" />
+    <Compile Include="DataSource\ConverterToPrimitives\CsvConverter.cs" />
+    <Compile Include="DataSource\ConverterToPrimitives\IConverter.cs" />
+    <Compile Include="DataSource\ConverterToPrimitives\OsmXmlCoverter.cs" />
+    <Compile Include="DataSource\ConverterToPrimitives\ParkingConverter.cs" />
+    <Compile Include="DataSource\ConverterToPrimitives\ParkingLanesConvertor.cs" />
     <Compile Include="DataSource\Nominatim.cs" />
     <Compile Include="DataSource\NominatimModels.cs" />
     <Compile Include="DataSource\OverpassModels.cs" />
-    <Compile Include="DataSource\OverpassModelsConverter.cs" />
     <Compile Include="DataSource\ParkingWay.cs" />
     <Compile Include="DataSource\Query.cs" />
     <Compile Include="Primitives\Line.cs" />

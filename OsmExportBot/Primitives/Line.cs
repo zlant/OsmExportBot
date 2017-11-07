@@ -12,8 +12,11 @@ namespace OsmExportBot.Primitives
         public string Color;
 
         public Line(IEnumerable<Point> points)
+            : this(points, "") { }
+
+        public Line(IEnumerable<Point> points, string color)
         {
-            Color = "";
+            Color = color;
             Points = points.ToArray();
         }
     }

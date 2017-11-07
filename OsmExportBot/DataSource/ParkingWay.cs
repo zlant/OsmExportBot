@@ -1,4 +1,5 @@
-﻿using OsmExportBot.Primitives;
+﻿using OsmExportBot.DataSource.ConverterToPrimitives;
+using OsmExportBot.Primitives;
 using SharpKml.Base;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace OsmExportBot.DataSource
 
         public ParkingLanes(osmWay way, osmNode[] nodes)
         {
-            var line = OverpassModelsConverter.ConvertOsmWayToPrimitiveLine(way, nodes);
+            var line = OsmXmlCoverter.ConvertOsmWayToPrimitiveLine(way, nodes);
 
             string color;
             if (GetLaneColor(way, "both", out color))

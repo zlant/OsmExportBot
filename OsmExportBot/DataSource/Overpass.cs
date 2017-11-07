@@ -1,4 +1,5 @@
-﻿using OsmExportBot.Generators;
+﻿using OsmExportBot.DataSource.ConverterToPrimitives;
+using OsmExportBot.Generators;
 using OsmExportBot.Primitives;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
@@ -17,7 +19,9 @@ namespace OsmExportBot.DataSource
     enum ParseOption
     {
         NoOption = 0,
-        ParkingLaneShift = 1
+        ParkingLaneShift = 1,
+        ParkingFree = 2,
+        Parking = 4
     }
 
     public class Overpass
@@ -72,97 +76,46 @@ namespace OsmExportBot.DataSource
                 result = webClient.DownloadString(ApiUri);
             }
 
-            if (IsXmlResponse(query.Request))
-                query.Response = ConvertToPrimitives(Desir<osm>(result), GetParsingOption(query.Request));
+            IConverter converet = GetConverter(query);
+            query.Response = converet.Convert(result, query);
+        }
+
+        private IConverter GetConverter(Query query)
+        {
+            if (query.IsXmlResponse())
+            {
+                var options = GetParsingOption(query);
+
+                if (options.HasFlag(ParseOption.ParkingLaneShift))
+                {
+                    return new ParkingLanesConvertor();
+                }
+                else if (options.HasFlag(ParseOption.ParkingFree))
+                {
+                    return new ParkingFreeConverter();
+                }
+                else return new OsmXmlCoverter();
+            }
             else // if csv
             {
-                string color = GeneratorKml.StylesMapsMe[Rules.IndexOfRule(query.RuleName) % GeneratorKml.StylesMapsMe.Length];
-                query.Response = ConvertToPrimitives(result, color);
+                return new CsvConverter();
             }
         }
 
-        private T Desir<T>(string xml)
-        {
-            XmlSerializer formatter = new XmlSerializer(typeof(T));
-            T result;
-
-            using (TextReader streamReader = new StringReader(xml))
-            {
-                result = (T)formatter.Deserialize(streamReader);
-            }
-
-            return result;
-        }
-
-        public bool IsXmlResponse(string request)
-        {
-            return request.Contains("out:xml");
-        }
-
-        private ParseOption GetParsingOption(string query)
+        private ParseOption GetParsingOption(Query query)
         {
             ParseOption options = ParseOption.NoOption;
 
-            if (query.Contains("parking:lane:") || query.Contains("parking:condition:"))
+            if (query.Request.Contains("parking:lane:") || query.Request.Contains("parking:condition:"))
                 options = options | ParseOption.ParkingLaneShift;
 
+            if (query.RuleName.Contains("free") && query.RuleName.Contains("parking"))
+                options = options | ParseOption.ParkingFree;
+
+            if (query.RuleName.Contains("parking"))
+                options = options | ParseOption.Parking;
+
             return options;
-        }
-
-        private PrimitiveCollections ConvertToPrimitives(string csv, string color)
-        {
-            var primitives = new PrimitiveCollections();
-
-            foreach (var line in csv.Split('\n'))
-            {
-                var location = line.Trim().Split('\t');
-                double lat, lon;
-
-                if (!double.TryParse(location[0], NumberStyles.Float, CultureInfo.InvariantCulture, out lat) ||
-                    !double.TryParse(location[1], NumberStyles.Float, CultureInfo.InvariantCulture, out lon))
-                    continue;
-                
-                primitives.Points.Add(new Point(lat, lon, color));
-            }
-
-            return primitives;
-        }
-
-        private PrimitiveCollections ConvertToPrimitives(osm xml, ParseOption options)
-        {
-            var primitives = new PrimitiveCollections();
-
-            xml.node = xml.node
-                .OrderBy(x => x.id)
-                .ToArray();
-
-            if (options == ParseOption.ParkingLaneShift)
-            {
-                var pways = xml.way
-                    .Where(x => ParkingLanes.IsParkingLane(x))
-                    .Select(x => new ParkingLanes(x, xml.node))
-                    .SelectMany(x => x.GetLines());
-
-                primitives.Lines.AddRange(pways);
-            }
-
-            var ways = xml.way
-                .Where(x => !ParkingLanes.IsParkingLane(x))
-                .Select(x => OverpassModelsConverter.ConvertOsmWayToPrimitiveLine(x, xml.node));
-
-            primitives.Lines.AddRange(ways);
-
-
-            var unrefNodes = xml.node
-                .Select(x => x.id)
-                .Except(xml.way
-                    .SelectMany(x => x.nd.Select(z => z.@ref)))
-                .Join(xml.node, o => o, i => i.id, (o, i) => i)
-                .Select(x => new Point(x.lat, x.lon));
-
-            primitives.Points.AddRange(unrefNodes);
-
-            return primitives;
         }
         #endregion
     }

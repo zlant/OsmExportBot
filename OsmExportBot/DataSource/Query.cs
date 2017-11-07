@@ -12,5 +12,10 @@ namespace OsmExportBot.DataSource
         public string RuleName { get; set; }
         public string Request { get; set; }
         public PrimitiveCollections Response { get; set; }
+
+        public bool IsXmlResponse()
+        {
+            return Request.Contains("out:xml");
+        }
     }
 }

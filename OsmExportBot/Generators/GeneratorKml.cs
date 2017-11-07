@@ -27,7 +27,7 @@ namespace OsmExportBot.Generators
         Dictionary<string, Color32> colors = new Dictionary<string, Color32> {
             { "red",     new Color32(0x53, 0x00, 0x00, 0xab) },
             { "blue",    new Color32(0xb3, 0xdd, 0x22, 0x00) },
-            { "green",   new Color32(0xb3, 0x00, 0xff, 0x00) },
+            { "green",   new Color32(0xb3, 0x00, 0xe0, 0x00) },
             { "orange",  new Color32(0xb3, 0x00, 0xa5, 0xff) },
             { "gray",    new Color32(0x88, 0x88, 0x88, 0x88) },
             { "purpure", new Color32(0xb3, 0x80, 0x00, 0x80) }
