@@ -9,47 +9,59 @@ using System.IO;
 
 namespace OsmExportBot.DataSource.ConverterToPrimitives
 {
-    public class OsmXmlCoverter : IConverter
+    public class OsmXmlConverter : IConverter
     {
-        public static Line ConvertOsmWayToPrimitiveLine(osmWay way, osmNode[] nodes)
+        public static Line ConvertOsmWayToPrimitiveLine(osmWay way)
         {
-            var ids = nodes
-                .Select(x => x.id)
-                .ToList();
-
-            return new Line(way.nd
-                .Select(x => nodes[ids.BinarySearch(x.@ref)])
+            return new Line(way.nodes
                 .Select(x => new Point(x.lat, x.lon)));
         }
 
         public PrimitiveCollections Convert(string xml, Query query)
         {
             var osm = Desir(xml);
+            PreprocessingOsmXml(osm);
             return Convert(osm, query);
+        }
+
+        private void PreprocessingOsmXml(osm xml)
+        {
+            var nodes = xml.node
+                .OrderBy(x => x.id)
+                .ToArray();
+
+            var ids = nodes
+                .Select(x => x.id)
+                .ToList();
+
+            for (int i = 0; i < xml.way.Length; i++)
+            {
+                xml.way[i].nodes = xml.way[i].nd
+                    .Select(x => nodes[ids.BinarySearch(x.@ref)])
+                    .ToArray();
+
+                for (int j = 0; j < xml.way[i].nodes.Length; j++)
+                {
+                    xml.way[i].nodes[j].refed = true;
+                }
+            }
         }
 
         protected virtual PrimitiveCollections Convert(osm xml, Query query)
         {
             var primitives = new PrimitiveCollections();
 
-            var nodes = xml.node
-                .OrderBy(x => x.id)
-                .ToArray();
-            
             var lines = xml.way
-                .Select(x => ConvertOsmWayToPrimitiveLine(x, nodes));
+                .Select(x => ConvertOsmWayToPrimitiveLine(x));
 
             primitives.Lines.AddRange(lines);
 
             var unrefNodes = xml.node
-                .Select(x => x.id)
-                .Except(xml.way
-                    .SelectMany(x => x.nd.Select(z => z.@ref)))
-                .Join(xml.node, o => o, i => i.id, (o, i) => i)
+                .Where(x => !x.refed)
                 .Select(x => new Point(x.lat, x.lon));
 
             primitives.Points.AddRange(unrefNodes);
-            
+
             return primitives;
         }
 

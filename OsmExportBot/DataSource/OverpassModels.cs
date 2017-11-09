@@ -32,18 +32,31 @@ namespace OsmExportBot.DataSource
         [XmlAttribute()]
         public System.DateTime osm_base { get; set; }
     }
+
+    [XmlType(AnonymousType = true)]
+    public partial class osmGeo
+    {
+        [XmlElement("tag")]
+        public osmTag[] tag { get; set; }
+
+        [XmlAttribute()]
+        public ulong id { get; set; }
+    }
     
     [XmlType(AnonymousType = true)]
-    public partial class osmWay
+    public partial class osmWay : osmGeo
     {
+        [XmlIgnore()]
+        public osmNode[] nodes { get; set; }
+
         [XmlElement("nd")]
         public osmWayND[] nd { get; set; }
-        
+        /*
         [XmlElement("tag")]
-        public osmWayTag[] tag { get; set; }
+        public osmTag[] tag { get; set; }
         
         [XmlAttribute()]
-        public uint id { get; set; }
+        public ulong id { get; set; }*/
     }
     
     [XmlType(AnonymousType = true)]
@@ -54,7 +67,7 @@ namespace OsmExportBot.DataSource
     }
     
     [XmlType(AnonymousType = true)]
-    public partial class osmWayTag
+    public partial class osmTag
     {
         [XmlAttribute()]
         public string k { get; set; }
@@ -64,15 +77,21 @@ namespace OsmExportBot.DataSource
     }
     
     [XmlType(AnonymousType = true)]
-    public partial class osmNode
-    {
+    public partial class osmNode : osmGeo
+    {/*
         [XmlAttribute()]
-        public ulong id { get; set; }
+        public ulong id { get; set; }*/
         
         [XmlAttribute()]
         public double lat { get; set; }
         
         [XmlAttribute()]
         public double lon { get; set; }
+        /*
+        [XmlElement("tag")]
+        public osmTag[] tag { get; set; }*/
+
+        [XmlIgnore()]
+        public bool refed { get; set; }
     }
 }

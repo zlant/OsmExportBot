@@ -14,14 +14,14 @@ namespace OsmExportBot.Generators
     public class GeneratorKml : Generator
     {
         public static string[] StylesMapsMe = {
-            "placemark-blue",
-            "placemark-brown",
-            "placemark-green",
-            "placemark-orange",
-            "placemark-pink",
-            "placemark-purple",
-            "placemark-red",
-            "placemark-yellow"
+            "blue",
+            "brown",
+            "green",
+            "orange",
+            "pink",
+            "purple",
+            "red",
+            "yellow"
         };
 
         Dictionary<string, Color32> colors = new Dictionary<string, Color32> {
@@ -51,7 +51,7 @@ namespace OsmExportBot.Generators
                 };
                 var placemark = new Placemark {
                     Geometry = point,
-                    StyleUrl = new Uri("#" + coord.Color, UriKind.Relative)
+                    StyleUrl = new Uri("#placemark-" + coord.Color, UriKind.Relative)
                 };
                 placemarks.Add(placemark);
             }

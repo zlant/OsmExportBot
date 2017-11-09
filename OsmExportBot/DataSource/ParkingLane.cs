@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace OsmExportBot.DataSource
 {
-    class ParkingLanes
+    class ParkingLane
     {
         public static bool IsParkingLane(osmWay way)
         {
@@ -20,9 +20,9 @@ namespace OsmExportBot.DataSource
         public Line Right { get; set; }
         public Line Left { get; set; }
 
-        public ParkingLanes(osmWay way, osmNode[] nodes)
+        public ParkingLane(osmWay way)
         {
-            var line = OsmXmlCoverter.ConvertOsmWayToPrimitiveLine(way, nodes);
+            var line = OsmXmlConverter.ConvertOsmWayToPrimitiveLine(way);
 
             string color;
             if (GetLaneColor(way, "both", out color))

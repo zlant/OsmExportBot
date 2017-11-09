@@ -15,13 +15,11 @@ using System.Xml.Serialization;
 
 namespace OsmExportBot.DataSource
 {
-    [Flags]
     enum ParseOption
     {
-        NoOption = 0,
-        ParkingLaneShift = 1,
-        ParkingFree = 2,
-        Parking = 4
+        Default,
+        Parking,
+        ParkingFree
     }
 
     public class Overpass
@@ -84,17 +82,15 @@ namespace OsmExportBot.DataSource
         {
             if (query.IsXmlResponse())
             {
-                var options = GetParsingOption(query);
-
-                if (options.HasFlag(ParseOption.ParkingLaneShift))
+                switch (GetParsingOption(query))
                 {
-                    return new ParkingLanesConvertor();
+                    case ParseOption.ParkingFree:
+                        return new ParkingFreeConverter();
+                    case ParseOption.Parking:
+                        return new ParkingConverter();
+                    default:
+                        return new OsmXmlConverter();
                 }
-                else if (options.HasFlag(ParseOption.ParkingFree))
-                {
-                    return new ParkingFreeConverter();
-                }
-                else return new OsmXmlCoverter();
             }
             else // if csv
             {
@@ -104,16 +100,13 @@ namespace OsmExportBot.DataSource
 
         private ParseOption GetParsingOption(Query query)
         {
-            ParseOption options = ParseOption.NoOption;
-
-            if (query.Request.Contains("parking:lane:") || query.Request.Contains("parking:condition:"))
-                options = options | ParseOption.ParkingLaneShift;
-
-            if (query.RuleName.Contains("free") && query.RuleName.Contains("parking"))
-                options = options | ParseOption.ParkingFree;
+            ParseOption options = ParseOption.Default;
 
             if (query.RuleName.Contains("parking"))
-                options = options | ParseOption.Parking;
+                options = ParseOption.Parking;
+
+            if (query.RuleName.Contains("free") && query.RuleName.Contains("parking"))
+                options = ParseOption.ParkingFree;
 
             return options;
         }

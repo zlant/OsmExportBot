@@ -62,13 +62,13 @@
     <Compile Include="Commands\CreateCommand.cs" />
     <Compile Include="DataSource\ConverterToPrimitives\CsvConverter.cs" />
     <Compile Include="DataSource\ConverterToPrimitives\IConverter.cs" />
-    <Compile Include="DataSource\ConverterToPrimitives\OsmXmlCoverter.cs" />
+    <Compile Include="DataSource\ConverterToPrimitives\OsmXmlConverter.cs" />
     <Compile Include="DataSource\ConverterToPrimitives\ParkingConverter.cs" />
-    <Compile Include="DataSource\ConverterToPrimitives\ParkingLanesConvertor.cs" />
+    <Compile Include="DataSource\ConverterToPrimitives\ParkingFreeConverter.cs" />
     <Compile Include="DataSource\Nominatim.cs" />
     <Compile Include="DataSource\NominatimModels.cs" />
     <Compile Include="DataSource\OverpassModels.cs" />
-    <Compile Include="DataSource\ParkingWay.cs" />
+    <Compile Include="DataSource\ParkingLane.cs" />
     <Compile Include="DataSource\Query.cs" />
     <Compile Include="Primitives\Line.cs" />
     <Compile Include="Primitives\LineOffseter.cs" />
