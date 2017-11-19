@@ -50,8 +50,8 @@ namespace OsmExportBot.DataSource.ConverterToPrimitives
 
         private string GetColor(osmGeo parking)
         {
-            var access = parking.tag.FirstOrDefault(x => x.k == "access")?.v;
-            var fee = parking.tag.FirstOrDefault(x => x.k == "fee")?.v;
+            var access = parking.tag?.FirstOrDefault(x => x.k == "access")?.v;
+            var fee = parking.tag?.FirstOrDefault(x => x.k == "fee")?.v;
 
             switch (access)
             {
