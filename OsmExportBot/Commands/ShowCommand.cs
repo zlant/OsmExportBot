@@ -14,20 +14,20 @@ namespace OsmExportBot.Commands
     {
         public override string Name { get; set; } = "show";
 
-        public override MessageType Type { get; set; } = MessageType.TextMessage;
+        public override MessageType Type { get; set; } = MessageType.Text;
 
-        public override void Excecute(Message message, TelegramBotClient bot)
+        public async override Task Excecute(Message message, TelegramBotClient bot)
         {
             var words = message.Text.Split(' ');
             if (words.Length != 2)
             {
-                bot.SendTextMessageAsync(message.Chat.Id, "Неправильный формат команды. Пример: `/show nolvl`", parseMode: ParseMode.Markdown);
+                await bot.SendTextMessageAsync(message.Chat.Id, "Неправильный формат команды. Пример: `/show nolvl`", parseMode: ParseMode.Markdown);
                 return;
             }
             var name = words[1].ToLower();
             string path = Config.RulesFolder + name + ".txt";
             using (var rd = new StreamReader(path))
-                bot.SendTextMessageAsync(message.Chat.Id, rd.ReadToEnd());
+                await bot.SendTextMessageAsync(message.Chat.Id, rd.ReadToEnd());
             return;
         }
     }

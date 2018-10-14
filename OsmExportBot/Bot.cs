@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -29,28 +30,29 @@ namespace OsmExportBot
 
         static LocationCommand locationCommand = new LocationCommand();
 
-        public static TelegramBotClient Client { get; set; } = new TelegramBotClient(Config.Token);
+        public static TelegramBotClient Client { get; set; } = 
+            new TelegramBotClient(Config.Token);
 
         public static async Task<Update[]> GetUpdates()
         {
             return await Client.GetUpdatesAsync(offset);
         }
 
-        public static void ProcessingUpdates(Update[] updates)
+        public async static Task ProcessingUpdates(Update[] updates)
         {
             foreach (var update in updates)
             {
-                ProcessingUpdate(update);
+                await ProcessingUpdate(update);
             }
         }
 
-        public static void ProcessingUpdate(Update update)
+        public async static Task ProcessingUpdate(Update update)
         {
             if (update.Id >= offset)
                 offset = update.Id + 1;
             try
             {
-                if (update.Message.Type == MessageType.TextMessage)
+                if (update.Message.Type == MessageType.Text)
                 {
                     WriteLog(update.Message.Chat.Id, update.Message.Text);
 
@@ -59,12 +61,12 @@ namespace OsmExportBot
 
                     if (command != null)
                     {
-                        command.Excecute(update.Message, Client);
+                        await command.Excecute(update.Message, Client);
                     }
                     else if (UserState.NewRule.ContainsKey(update.Message.Chat.Id))
                     {
                         if (Rules.NewRule(update))
-                            Client.SendTextMessageAsync(update.Message.Chat.Id, "Новое правило создано.");
+                            await Client.SendTextMessageAsync(update.Message.Chat.Id, "Новое правило создано.");
                     }
                     else if (update.Message.Text.StartsWith("/"))
                     {
@@ -73,22 +75,22 @@ namespace OsmExportBot
                         if (Rules.GetRules().Contains(rule))
                         {
                             UserState.CurrentRule[update.Message.Chat.Id] = rule;
-                            Client.SendTextMessageAsync(update.Message.Chat.Id, "Теперь отправьте местоположение.");
+                            await Client.SendTextMessageAsync(update.Message.Chat.Id, "Теперь отправьте местоположение.");
                         }
                         else
                         {
-                            Client.SendTextMessageAsync(update.Message.Chat.Id, "Такого правила не существует.");
+                            await Client.SendTextMessageAsync(update.Message.Chat.Id, "Такого правила не существует.");
                         }
                     }
                 }
-                else if (update.Message.Type == MessageType.LocationMessage)
+                else if (update.Message.Type == MessageType.Location)
                 {
-                    locationCommand.Excecute(update.Message, Client);
+                    await locationCommand.Excecute(update.Message, Client);
                 }
             }
             catch (Exception ex)
             {
-                Client.SendTextMessageAsync(update.Message.Chat.Id, "Что-то пошло не так, попробуйте еще раз.");
+                await Client.SendTextMessageAsync(update.Message.Chat.Id, "Что-то пошло не так, попробуйте еще раз.");
                 WriteError(ex);
             }
         }
@@ -121,7 +123,7 @@ namespace OsmExportBot
             semaphore.WaitOne();
             try
             {
-                ProcessingUpdates(await GetUpdates());
+                await ProcessingUpdates(await GetUpdates());
             }
             catch (Exception ex)
             {

@@ -13,11 +13,11 @@ namespace OsmExportBot.Commands
     {
         public override string Name { get; set; } = "start";
 
-        public override MessageType Type { get; set; } = MessageType.TextMessage;
+        public override MessageType Type { get; set; } = MessageType.Text;
 
-        public override void Excecute(Message message, TelegramBotClient bot)
+        public async override Task Excecute(Message message, TelegramBotClient bot)
         {
-            bot.SendTextMessageAsync(message.Chat.Id, Config.StartText, parseMode: ParseMode.Markdown);
+            await bot.SendTextMessageAsync(message.Chat.Id, Config.StartText, parseMode: ParseMode.Markdown);
         }
     }
 }

@@ -1,7 +1,0 @@
-[out:csv(::lat,::lon)][timeout:25];
-(
-  node["building"][!"building:levels"]({{bbox}});
-  way["building"][!"building:levels"]({{bbox}});
-  relation["building"][!"building:levels"]({{bbox}});
-);
-out center;

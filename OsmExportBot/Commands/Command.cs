@@ -14,7 +14,7 @@ namespace OsmExportBot.Commands
         public abstract string Name { get; set; }
         public abstract MessageType Type { get; set; }
 
-        public abstract void Excecute(Message message, TelegramBotClient bot);
+        public abstract Task Excecute(Message message, TelegramBotClient bot);
 
         public bool Contains(string text)
         {

@@ -15,30 +15,30 @@ namespace OsmExportBot.Commands
     {
         public override string Name { get; set; } = "set";
 
-        public override MessageType Type { get; set; } = MessageType.TextMessage;
+        public override MessageType Type { get; set; } = MessageType.Text;
 
-        public override void Excecute(Message message, TelegramBotClient bot)
+        public async override Task Excecute(Message message, TelegramBotClient bot)
         {
             var words = message.Text.Split(' ');
             if (words.Length != 2)
             {
-                bot.SendTextMessageAsync(message.Chat.Id, "Неправильный формат команды. Пример: `/set name`", parseMode: ParseMode.Markdown);
+                await bot.SendTextMessageAsync(message.Chat.Id, "Неправильный формат команды. Пример: `/set name`", parseMode: ParseMode.Markdown);
                 return;
             }
             var rule = words[1].Trim().ToLower();
             if (!Regex.IsMatch(rule, @"^[A-Za-z0-9]+$"))
             {
-                bot.SendTextMessageAsync(message.Chat.Id, "Название может содержать только буквы латинского алфавита и цифры.");
+                await bot.SendTextMessageAsync(message.Chat.Id, "Название может содержать только буквы латинского алфавита и цифры.");
                 return;
             }
             if (Rules.GetRules().Contains(rule))
             {
-                bot.SendTextMessageAsync(message.Chat.Id, "Правило с таким именем уже существует, придумайте другое название.");
+                await bot.SendTextMessageAsync(message.Chat.Id, "Правило с таким именем уже существует, придумайте другое название.");
                 return;
             }
 
             UserState.NewRule[message.Chat.Id] = rule;
-            bot.SendTextMessageAsync(message.Chat.Id, "Теперь отправьте текст overpass запроса.");
+            await bot.SendTextMessageAsync(message.Chat.Id, "Теперь отправьте текст overpass запроса.");
         }
     }
 }

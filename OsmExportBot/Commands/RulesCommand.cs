@@ -14,13 +14,13 @@ namespace OsmExportBot.Commands
     {
         public override string Name { get; set; } = "rules";
 
-        public override MessageType Type { get; set; } = MessageType.TextMessage;
+        public override MessageType Type { get; set; } = MessageType.Text;
 
-        public override void Excecute(Message message, TelegramBotClient bot)
+        public async override Task Excecute(Message message, TelegramBotClient bot)
         {
             string msg = "Нажмите на нужный набор:\r\n";
             string commands = Rules.GetRulesCommands();
-            bot.SendTextMessageAsync(message.Chat.Id, msg + commands);
+            await bot.SendTextMessageAsync(message.Chat.Id, msg + commands);
             return;
         }
     }
