@@ -113,25 +113,25 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Queries\noaddr.txt">
+    <Content Include="Queries\noaddr.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Queries\noentrance.txt">
+    <Content Include="Queries\noentrance.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Queries\noflats.txt">
+    <Content Include="Queries\noflats.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Queries\nohours.txt">
+    <Content Include="Queries\nohours.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Queries\nolvl.txt">
+    <Content Include="Queries\nolvl.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Queries\parkingfree.txt">
+    <Content Include="Queries\parkingfree.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Queries\parkinglane.txt">
+    <Content Include="Queries\parkinglane.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
