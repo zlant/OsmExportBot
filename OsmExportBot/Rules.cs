@@ -30,7 +30,7 @@ namespace OsmExportBot
             string name;
             UserState.NewRule.TryRemove(update.Message.Chat.Id, out name);
 
-            using (StreamWriter wr = new StreamWriter(Config.RulesFolder + name + ".txt"))
+            using (StreamWriter wr = new StreamWriter(Config.RulesFolder + name + ".overpassql"))
             {
                 wr.Write(update.Message.Text);
             }
@@ -41,7 +41,7 @@ namespace OsmExportBot
         public static string GetRule(string name)
         {
             string query;
-            string path = Config.RulesFolder + name + ".txt";
+            string path = Config.RulesFolder + name + ".overpassql";
 
             using (var rd = new StreamReader(path))
                 query = rd.ReadToEnd();

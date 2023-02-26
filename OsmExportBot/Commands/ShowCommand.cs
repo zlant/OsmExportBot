@@ -25,7 +25,7 @@ namespace OsmExportBot.Commands
                 return;
             }
             var name = words[1].ToLower();
-            string path = Config.RulesFolder + name + ".txt";
+            string path = Config.RulesFolder + name + ".overpassql";
             using (var rd = new StreamReader(path))
                 await bot.SendTextMessageAsync(message.Chat.Id, rd.ReadToEnd());
             return;
