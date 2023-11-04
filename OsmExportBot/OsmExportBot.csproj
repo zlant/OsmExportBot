@@ -1,117 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B8AC0D2C-8D3B-4C47-ABEC-D78C24FD3707}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmExportBot</RootNamespace>
-    <AssemblyName>OsmExportBot</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugWithClient|AnyCPU'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\DebugWithClient\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="SharpKml, Version=3.0.0.0, Culture=neutral, PublicKeyToken=9bb853c026a5c0ac, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpKml.Core.3.0.0\lib\portable45-net45+win8+wpa81\SharpKml.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Telegram.Bot, Version=14.10.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Telegram.Bot.14.10.0\lib\net45\Telegram.Bot.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <None Remove="Queries\noaddr.overpassql" />
+    <None Remove="Queries\noentrance.overpassql" />
+    <None Remove="Queries\noflats.overpassql" />
+    <None Remove="Queries\nohours.overpassql" />
+    <None Remove="Queries\nolvl.overpassql" />
+    <None Remove="Queries\parkingfree.overpassql" />
+    <None Remove="Queries\parkinglane.overpassql" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Commands\CreateCommand.cs" />
-    <Compile Include="DataSource\ConverterToPrimitives\CsvConverter.cs" />
-    <Compile Include="DataSource\ConverterToPrimitives\IConverter.cs" />
-    <Compile Include="DataSource\ConverterToPrimitives\OsmXmlConverter.cs" />
-    <Compile Include="DataSource\ConverterToPrimitives\ParkingConverter.cs" />
-    <Compile Include="DataSource\ConverterToPrimitives\ParkingFreeConverter.cs" />
-    <Compile Include="DataSource\Nominatim.cs" />
-    <Compile Include="DataSource\NominatimModels.cs" />
-    <Compile Include="DataSource\OverpassModels.cs" />
-    <Compile Include="DataSource\ParkingLane.cs" />
-    <Compile Include="DataSource\Query.cs" />
-    <Compile Include="Primitives\Line.cs" />
-    <Compile Include="Primitives\LineOffseter.cs" />
-    <Compile Include="Primitives\Point.cs" />
-    <Compile Include="Primitives\PrimitiveCollections.cs" />
-    <Compile Include="Rules.cs" />
-    <Compile Include="UserState.cs" />
-    <Compile Include="Bot.cs" />
-    <Compile Include="Commands\LocationCommand.cs" />
-    <Compile Include="Commands\RulesCommand.cs" />
-    <Compile Include="Commands\ShowCommand.cs" />
-    <Compile Include="Commands\SetCommand.cs" />
-    <Compile Include="Commands\StartCommand.cs" />
-    <Compile Include="Commands\Command.cs" />
-    <Compile Include="Config.cs" />
-    <Compile Include="DataSource\Overpass.cs" />
-    <Compile Include="Generators\GeneratorGpx.cs" />
-    <Compile Include="Generators\GeneratorKml.cs" />
-    <Compile Include="Generators\Generator.cs" />
-    <Compile Include="Gpx\GpsLocation.cs" />
-    <Compile Include="Gpx\Gpx.cs" />
-    <Compile Include="Gpx\GpxProperties.cs" />
-    <Compile Include="Gpx\GpxReader.cs" />
-    <Compile Include="Gpx\GpxWriter.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
+
   <ItemGroup>
     <Content Include="Queries\noaddr.overpassql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -135,12 +39,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <PackageReference Include="SharpKml.Core" Version="3.4.0" />
+    <PackageReference Include="Telegram.Bot" Version="14.10.0" />
+  </ItemGroup>
+
 </Project>
