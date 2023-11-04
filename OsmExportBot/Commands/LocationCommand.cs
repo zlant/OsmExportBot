@@ -43,22 +43,6 @@ namespace OsmExportBot.Commands
             await bot.SendDocumentAsync(message.Chat.Id, file);
 
             Console.WriteLine(fileName);
-            WriteLog(message.Chat.Id, rule);
-        }
-
-        void WriteLog(long id, string ruleName)
-        {
-            //var logfile = "log" + DateTime.Now.Year % 100 + DateTime.Now.Month + ".txt";
-            var logfile = "log.txt";
-
-            using (StreamWriter wr = new StreamWriter(Config.LogFolder + logfile, true))
-            {
-                wr.WriteLine("{2} {3}   {0,-17}{1}",
-                    id,
-                    ruleName,
-                    DateTime.Now.ToString("yyyy-MM-dd"),
-                    DateTime.Now.ToString("HH-mm-ss"));
-            }
         }
     }
 }

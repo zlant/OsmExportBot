@@ -54,8 +54,6 @@ namespace OsmExportBot
             {
                 if (update.Message.Type == MessageType.Text)
                 {
-                    WriteLog(update.Message.Chat.Id, update.Message.Text);
-
                     var command = commandsWithKeyWord
                         .FirstOrDefault(x => update.Message.Text.StartsWith("/" + x.Name));
 
@@ -91,30 +89,6 @@ namespace OsmExportBot
             catch (Exception ex)
             {
                 await Client.SendTextMessageAsync(update.Message.Chat.Id, "Что-то пошло не так, попробуйте еще раз.");
-                WriteError(ex);
-            }
-        }
-
-        static void WriteLog(long id, string message)
-        {
-            var logfile = "log_full.txt";
-
-            using (StreamWriter wr = new StreamWriter(Config.LogFolder + logfile, true))
-            {
-                wr.WriteLine("{2}   {0,-17}{1}", id, message, DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"));
-            }
-        }
-
-        static void WriteError(Exception ex)
-        {
-            var logfile = "log_error.txt";
-
-            using (StreamWriter wr = new StreamWriter(Config.LogFolder + logfile, true))
-            {
-                wr.WriteLine("{0}: {1}\r\n{2}",
-                    DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss"),
-                    ex.Message,
-                    ex.StackTrace);
             }
         }
 
@@ -127,7 +101,6 @@ namespace OsmExportBot
             }
             catch (Exception ex)
             {
-                WriteError(ex);
             }
             finally
             {
