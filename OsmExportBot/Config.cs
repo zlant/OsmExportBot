@@ -9,7 +9,6 @@ namespace OsmExportBot
     public static class Config
     {
         public static string Token { get; set; } = "NEED TOKEN";
-        public static string RulesFolder { get; set; } = "Queries\\";
 
 
         public static string StartText =

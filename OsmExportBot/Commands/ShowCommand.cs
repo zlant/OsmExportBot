@@ -25,9 +25,8 @@ namespace OsmExportBot.Commands
                 return;
             }
             var name = words[1].ToLower();
-            string path = Config.RulesFolder + name + ".overpassql";
-            using (var rd = new StreamReader(path))
-                await bot.SendTextMessageAsync(message.Chat.Id, rd.ReadToEnd());
+            var query = Queries.Queries.ResourceManager.GetString(name);
+            await bot.SendTextMessageAsync(message.Chat.Id, query);
             return;
         }
     }

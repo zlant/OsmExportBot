@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,9 +14,12 @@ namespace OsmExportBot
     {
         public static IEnumerable<string> GetRules()
         {
-            var rules = Directory.GetFiles(Config.RulesFolder)
-                .Select(x => x.Split(Path.DirectorySeparatorChar).Last())
-                .Select(x => x.Split('.').First());
+            var rules = Queries.Queries.ResourceManager
+                .GetResourceSet(CultureInfo.CurrentCulture, true, true)!
+                .Cast<DictionaryEntry>()
+                .Where(x => x.Value is string)
+                .Select(x => x.Key.ToString())
+                .ToList();
             return rules;
         }
 
@@ -27,25 +32,12 @@ namespace OsmExportBot
 
         public static bool NewRule(Update update)
         {
-            string name;
-            UserState.NewRule.TryRemove(update.Message.Chat.Id, out name);
-
-            using (StreamWriter wr = new StreamWriter(Config.RulesFolder + name + ".overpassql"))
-            {
-                wr.Write(update.Message.Text);
-            }
-
-            return true;
+            throw new NotImplementedException();
         }
 
         public static string GetRule(string name)
         {
-            string query;
-            string path = Config.RulesFolder + name + ".overpassql";
-
-            using (var rd = new StreamReader(path))
-                query = rd.ReadToEnd();
-
+            string query = Queries.Queries.ResourceManager.GetString(name)!;
             return query;
         }
 
