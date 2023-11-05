@@ -1,0 +1,7 @@
+version: '3.9'
+services:
+  osm-export-bot:
+    build:
+      context: .
+      dockerfile: ./OsmExportBotApp/Dockerfile
+    image: zetx16/osm-export-bot

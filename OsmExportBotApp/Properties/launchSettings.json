@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "OsmExportBotApp": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
